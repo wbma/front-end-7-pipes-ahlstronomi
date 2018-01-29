@@ -9,6 +9,9 @@ import { TopBarComponent } from './top-bar/top-bar.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
+import {FormsModule} from '@angular/forms';
+import {MediaService} from './services/media.service';
+import {HttpClientModule} from '@angular/common/http';
 
 
 @NgModule({
@@ -18,13 +21,15 @@ import { LogoutComponent } from './logout/logout.component';
     TopBarComponent,
     RegisterComponent,
     LoginComponent,
-    LogoutComponent
+    LogoutComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [MediaService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

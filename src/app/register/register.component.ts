@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {MediaService} from '../services/media.service';
 
 @Component({
   selector: 'app-register',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegisterComponent implements OnInit {
 
-  constructor() { }
+  constructor(public mediaService: MediaService) { }
 
   ngOnInit() {
   }
