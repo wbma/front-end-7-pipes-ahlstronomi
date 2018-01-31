@@ -1,14 +1,19 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class MediaService {
 
   username: string;
   password: string;
+  email: string;
+  fullName: string;
+
+
   apiUrl = 'http://media.mw.metropolia.fi/wbma';
 
-  constructor(public http: HttpClient) {
+  constructor(public http: HttpClient, private router: Router) {
   }
 
 
@@ -18,7 +23,7 @@ export class MediaService {
 
     const body = {
       username: this.username,
-      password: this.password
+      password: this.password,
     };
 
     const settings = {
@@ -27,6 +32,25 @@ export class MediaService {
 
     this.http.post(this.apiUrl + '/login', body, settings).subscribe(response => {
       console.log(response['token']);
+      localStorage.setItem('token', response['token']);
+      this.router.navigate(['front']);
+    }, (error: HttpErrorResponse) => {
+      console.log(error.statusText);
+    });
+  }
+
+  public register() {
+
+    const body = {
+      username: this.username,
+      password: this.password,
+      full_name: this.fullName,
+      email: this.email
+    };
+
+    this.http.post(this.apiUrl + '/users', body).subscribe(data => {
+      console.log(data);
+      this.login();
     });
   }
 
