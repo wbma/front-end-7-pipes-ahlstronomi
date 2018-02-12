@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {Router} from '@angular/router';
 
@@ -7,15 +7,14 @@ export class MediaService {
 
   username: string;
   password: string;
-  email: string;
-  fullName: string;
+  status: string;
 
+  title: string;
+  mediaDescription: string;
 
   apiUrl = 'http://media.mw.metropolia.fi/wbma';
 
-  constructor(public http: HttpClient, private router: Router) {
-  }
-
+  constructor(private http: HttpClient, private router: Router) { }
 
   public login() {
     console.log('uname: ' + this.username);
@@ -23,7 +22,7 @@ export class MediaService {
 
     const body = {
       username: this.username,
-      password: this.password,
+      password: this.password
     };
 
     const settings = {
@@ -36,23 +35,35 @@ export class MediaService {
       this.router.navigate(['front']);
     }, (error: HttpErrorResponse) => {
       console.log(error.statusText);
+      this.status = error.error.message;
     });
   }
 
-  public register() {
+  getImages(fromIndex: string) {
 
-    const body = {
-      username: this.username,
-      password: this.password,
-      full_name: this.fullName,
-      email: this.email
+    return this.http.get(this.apiUrl + '/media', {
+      params: {
+        start: fromIndex,
+        limit: '10'
+      }
+    });
+  }
+
+  register(user) {
+    return this.http.post(this.apiUrl + '/users', user);
+  }
+
+  upload(formData) {
+    const settings = {
+      headers: new HttpHeaders().set('x-access-token', localStorage.getItem('token')),
     };
-
-    this.http.post(this.apiUrl + '/users', body).subscribe(data => {
-      console.log(data);
-      this.login();
-    });
+    return this.http.post(this.apiUrl + '/media', formData, settings);
   }
 
-
+  getUserData() {
+    const settings = {
+      headers: new HttpHeaders().set('x-access-token', localStorage.getItem('token')),
+    };
+    return this.http.get(this.apiUrl + '/users/user', settings);
+  }
 }
